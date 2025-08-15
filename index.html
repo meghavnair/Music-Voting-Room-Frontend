@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glassmorphic Music Player</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-orbs">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-music"></i>
+            <span>SoundWave</span>
+        </div>
+        <div class="nav-menu">
+            <a href="#" class="nav-link active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-search"></i>
+                <span>Search</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-heart"></i>
+                <span>Favorites</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fas fa-list"></i>
+                <span>Playlists</span>
+            </a>
+            <a href="#" class="nav-link" onclick="openCreateRoomModal()">
+                <i class="fas fa-users"></i>
+                <span>Rooms</span>
+            </a>
+        </div>
+        <div class="user-profile">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face" alt="User">
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Discover Your Sound</h1>
+                <p>Experience music like never before with our glassmorphic interface</p>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search for songs, artists, or albums...">
+                    <button class="search-btn">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="hero-actions">
+                    <button class="action-btn primary" onclick="openCreateRoomModal()">
+                        <i class="fas fa-plus"></i>
+                        Create Room
+                    </button>
+                    <button class="action-btn secondary" onclick="openJoinRoomModal()">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Join Room
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Room Status (shown when in a room) -->
+        <section class="room-status" id="roomStatus" style="display: none;">
+            <div class="room-info">
+                <div class="room-details">
+                    <h3 id="roomName">Room Name</h3>
+                    <p><span id="memberCount">0</span> members • Room ID: <span id="roomId">XXXX</span></p>
+                </div>
+                <button class="leave-room-btn" onclick="leaveRoom()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Leave Room
+                </button>
+            </div>
+        </section>
+
+        <!-- Quick Stats -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <i class="fas fa-music"></i>
+                <div class="stat-info">
+                    <h3>2,847</h3>
+                    <p>Songs</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-info">
+                    <h3>156</h3>
+                    <p>Artists</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <div class="stat-info">
+                    <h3>142h</h3>
+                    <p>Listening Time</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-list-ul"></i>
+                <div class="stat-info">
+                    <h3>23</h3>
+                    <p>Playlists</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Music Player Widget -->
+        <section class="player-widget">
+            <div class="now-playing">
+                <div class="track-info">
+                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop" alt="Album Cover" class="album-cover">
+                    <div class="track-details">
+                        <h4>Bohemian Rhapsody</h4>
+                        <p>Queen</p>
+                    </div>
+                </div>
+                <div class="player-controls">
+                    <button class="control-btn secondary">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="control-btn primary play-pause">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn secondary">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+                <div class="player-extras">
+                    <button class="extra-btn" onclick="addCurrentToFavorites()">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="extra-btn" onclick="addCurrentToVoting()">
+                        <i class="fas fa-vote-yea"></i>
+                    </button>
+                    <div class="volume-control">
+                        <i class="fas fa-volume-up"></i>
+                        <input type="range" class="volume-slider" min="0" max="100" value="70">
+                    </div>
+                    <span class="time">3:24 / 5:55</span>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <input type="range" class="progress-slider" min="0" max="100" value="35">
+            </div>
+        </section>
+
+        <!-- Voting Queue (shown when in a room) -->
+        <section class="content-section voting-section" id="votingSection" style="display: none;">
+            <div class="section-header">
+                <h2>Vote for Next Song</h2>
+                <button class="add-song-btn" onclick="openAddSongModal()">
+                    <i class="fas fa-plus"></i>
+                    Add Song
+                </button>
+            </div>
+            <div class="voting-list" id="votingList">
+                <!-- Sample voting items -->
+                <div class="voting-item">
+                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop" alt="Track">
+                    <div class="track-details">
+                        <h4>Imagine</h4>
+                        <p>John Lennon</p>
+                    </div>
+                    <div class="vote-controls">
+                        <button class="vote-btn" onclick="voteForSong(this, 'up')">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span class="vote-count">5</span>
+                        </button>
+                        <button class="vote-btn" onclick="voteForSong(this, 'down')">
+                            <i class="fas fa-thumbs-down"></i>
+                            <span class="vote-count">1</span>
+                        </button>
+                    </div>
+                    <div class="vote-score">+4</div>
+                </div>
+                
+                <div class="voting-item">
+                    <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=60&h=60&fit=crop" alt="Track">
+                    <div class="track-details">
+                        <h4>Stairway to Heaven</h4>
+                        <p>Led Zeppelin</p>
+                    </div>
+                    <div class="vote-controls">
+                        <button class="vote-btn" onclick="voteForSong(this, 'up')">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span class="vote-count">8</span>
+                        </button>
+                        <button class="vote-btn" onclick="voteForSong(this, 'down')">
+                            <i class="fas fa-thumbs-down"></i>
+                            <span class="vote-count">2</span>
+                        </button>
+                    </div>
+                    <div class="vote-score">+6</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Playlists -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2>Featured Playlists</h2>
+                <a href="#" class="see-all">See All</a>
+            </div>
+            <div class="playlist-grid">
+                <div class="playlist-card">
+                    <div class="playlist-cover">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop" alt="Playlist">
+                        <div class="play-overlay">
+                            <button class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="playlist-info">
+                        <h3>Chill Vibes</h3>
+                        <p>Perfect for relaxing</p>
+                        <span class="track-count">24 tracks</span>
+                    </div>
+                </div>
+                
+                <div class="playlist-card">
+                    <div class="playlist-cover">
+                        <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop" alt="Playlist">
+                        <div class="play-overlay">
+                            <button class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="playlist-info">
+                        <h3>Workout Mix</h3>
+                        <p>High energy beats</p>
+                        <span class="track-count">32 tracks</span>
+                    </div>
+                </div>
+                
+                <div class="playlist-card">
+                    <div class="playlist-cover">
+                        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=200&fit=crop" alt="Playlist">
+                        <div class="play-overlay">
+                            <button class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="playlist-info">
+                        <h3>Focus Flow</h3>
+                        <p>Concentration music</p>
+                        <span class="track-count">18 tracks</span>
+                    </div>
+                </div>
+                
+                <div class="playlist-card">
+                    <div class="playlist-cover">
+                        <img src="https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=200&h=200&fit=crop" alt="Playlist">
+                        <div class="play-overlay">
+                            <button class="play-btn">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="playlist-info">
+                        <h3>Late Night</h3>
+                        <p>Smooth jazz & soul</p>
+                        <span class="track-count">27 tracks</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Activity -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2>Recently Played</h2>
+                <a href="#" class="see-all">View History</a>
+            </div>
+            <div class="track-list">
+                <div class="track-item">
+                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop" alt="Track">
+                    <div class="track-details">
+                        <h4>Imagine</h4>
+                        <p>John Lennon</p>
+                    </div>
+                    <span class="track-duration">3:03</span>
+                    <div class="track-actions">
+                        <button class="track-action" onclick="addToFavorites('Imagine', 'John Lennon', 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop')">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="track-action" onclick="addTrackToVoting('Imagine', 'John Lennon', 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop')">
+                            <i class="fas fa-vote-yea"></i>
+                        </button>
+                        <button class="track-action">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="track-item">
+                    <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=60&h=60&fit=crop" alt="Track">
+                    <div class="track-details">
+                        <h4>Stairway to Heaven</h4>
+                        <p>Led Zeppelin</p>
+                    </div>
+                    <span class="track-duration">8:02</span>
+                    <div class="track-actions">
+                        <button class="track-action" onclick="addToFavorites('Stairway to Heaven', 'Led Zeppelin', 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=60&h=60&fit=crop')">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="track-action" onclick="addTrackToVoting('Stairway to Heaven', 'Led Zeppelin', 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=60&h=60&fit=crop')">
+                            <i class="fas fa-vote-yea"></i>
+                        </button>
+                        <button class="track-action">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="track-item">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=60&h=60&fit=crop" alt="Track">
+                    <div class="track-details">
+                        <h4>Hotel California</h4>
+                        <p>Eagles</p>
+                    </div>
+                    <span class="track-duration">6:30</span>
+                    <div class="track-actions">
+                        <button class="track-action" onclick="addToFavorites('Hotel California', 'Eagles', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=60&h=60&fit=crop')">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="track-action" onclick="addTrackToVoting('Hotel California', 'Eagles', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=60&h=60&fit=crop')">
+                            <i class="fas fa-vote-yea"></i>
+                        </button>
+                        <button class="track-action">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Create Room Modal -->
+    <div class="modal" id="createRoomModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Room</h2>
+                <button class="close-btn" onclick="closeModal('createRoomModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="roomNameInput">Room Name</label>
+                    <input type="text" id="roomNameInput" placeholder="Enter room name">
+                </div>
+                <div class="form-group">
+                    <label for="roomDescription">Description (Optional)</label>
+                    <textarea id="roomDescription" placeholder="Describe your room..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="maxMembers">Max Members</label>
+                    <select id="maxMembers">
+                        <option value="5">5 Members</option>
+                        <option value="10">10 Members</option>
+                        <option value="20">20 Members</option>
+                        <option value="50">50 Members</option>
+                    </select>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="privateRoom">
+                    <label for="privateRoom">Private Room</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary" onclick="closeModal('createRoomModal')">Cancel</button>
+                <button class="btn primary" onclick="createRoom()">Create Room</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Room Modal -->
+    <div class="modal" id="joinRoomModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Join Room</h2>
+                <button class="close-btn" onclick="closeModal('joinRoomModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="roomIdInput">Room ID</label>
+                    <input type="text" id="roomIdInput" placeholder="Enter room ID">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary" onclick="closeModal('joinRoomModal')">Cancel</button>
+                <button class="btn primary" onclick="joinRoom()">Join Room</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Song to Voting Modal -->
+    <div class="modal" id="addSongModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Song to Vote</h2>
+                <button class="close-btn" onclick="closeModal('addSongModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Choose from Favorites</label>
+                    <div class="favorites-list" id="favoritesList">
+                        <div class="favorite-item" onclick="addFavoriteToVoting('Imagine', 'John Lennon', 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop')">
+                            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=50&h=50&fit=crop" alt="Track">
+                            <div class="track-details">
+                                <h4>Imagine</h4>
+                                <p>John Lennon</p>
+                            </div>
+                            <button class="add-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="favorite-item" onclick="addFavoriteToVoting('Bohemian Rhapsody', 'Queen', 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop')">
+                            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=50&h=50&fit=crop" alt="Track">
+                            <div class="track-details">
+                                <h4>Bohemian Rhapsody</h4>
+                                <p>Queen</p>
+                            </div>
+                            <button class="add-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider">OR</div>
+                <div class="form-group">
+                    <label>Search for a song</label>
+                    <div class="search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="songSearchInput" placeholder="Search songs..." onkeyup="searchSongs()">
+                    </div>
+                    <div class="search-results" id="searchResults">
+                        <!-- Search results will appear here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary" onclick="closeModal('addSongModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
