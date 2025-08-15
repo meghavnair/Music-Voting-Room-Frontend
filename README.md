@@ -233,10 +233,6 @@ Implement real-time communication for:
 4. Test thoroughly before submitting
 5. Create pull request with detailed description
 
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## 🐛 Known Issues
 
 - Audio visualizer currently uses mock data (requires Web Audio API integration)
